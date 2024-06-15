@@ -1,6 +1,7 @@
 const title1 = 'Cypress Title 1 Cypress';
 const title2 = 'Cypress Title 2 Cypress';
 const title3 = 'Cypress Title 3 Cypress';
+const title4 = 'Python Tutorials';
 const content1 = 'Cypress Content 1 Cypress';
 const content2 = 'Cypress Content 2 Cypress';
 const content3 = 'Cypress Content 3 Cypress';
@@ -46,19 +47,19 @@ const removeThread = (title) => {
     cy.get('.thread-left-cont > .thread-list-item').contains(title).should('not.exist');
 };
 
-// describe('Visuals', () => {
-//     it('should compare screenshot of the entire page', () => {
-//         cy.viewport(1000, 1000);
-//         cy.login('instructor');
-//         cy.visit(['sample', 'forum', 'threads', '9']);
-//
-//         cy.get('#posts_list').compareSnapshot('forum-threads-9',  1.0, {
-//             capture: 'viewport',
-//             clip: { x: 0, y: 0, width: 1000, height: 1000 },
-//             // Assuming the last parameter is the threshold for image comparison
-//         });
-//     });
-// });
+
+const uploadAttachmentAndDelete = (title) => {
+    cy.get('[data-testid="thread-list-item"]').contains(title).click();
+    cy.get('[data-testid="create-post-head"]').should('contain', title);
+    cy.get('[data-testid="edit-post-button"]').first().click();
+    cy.get('[data-testid="input-file1"]').selectFile('cypress/fixtures/sea_animals.png');
+    cy.get('[data-testid="file-upload-table-1"]').should('contain', 'sea_animals.png');
+    cy.get('[data-testid="forum-update-post"]').contains('Update Post').click();
+    cy.get('[data-testid="edit-post-button"]').first().click();
+    cy.get('[data-testid="mark-for-delete-btn"]').should('contain', 'Delete').click();
+    cy.get('[data-testid="mark-for-delete-btn"]').should('contain', 'Keep');
+    cy.get('[data-testid="forum-update-post"]').contains('Update Post').click();
+};
 const replyDisabled = (title, attachment) => {
     cy.get('.thread-left-cont > .thread-list-item').contains(title).click();
     // Reply button should be disabled by default with no text
@@ -100,6 +101,8 @@ describe('Test cases revolving around creating, replying to, merging, and removi
     });
 
     it('Create, reply to, merge, and delete threads', () => {
+        // Add and Delete Image Attachment
+        uploadAttachmentAndDelete(title4);
         // Comment
         createThread(title1, content1, 'Comment');
         // Question
