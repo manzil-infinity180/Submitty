@@ -46,19 +46,19 @@ const removeThread = (title) => {
     cy.get('.thread-left-cont > .thread-list-item').contains(title).should('not.exist');
 };
 
-describe('Visuals', () => {
-    it('should compare screenshot of the entire page', () => {
-        cy.viewport(1000, 1000);
-        cy.login('instructor');
-        cy.visit(['sample', 'forum', 'threads', '9']);
-
-        cy.get('#posts_list').compareSnapshot('forum-threads-9',  1.0, {
-            capture: 'viewport',
-            clip: { x: 0, y: 0, width: 1000, height: 1000 },
-            // Assuming the last parameter is the threshold for image comparison
-        });
-    });
-});
+// describe('Visuals', () => {
+//     it('should compare screenshot of the entire page', () => {
+//         cy.viewport(1000, 1000);
+//         cy.login('instructor');
+//         cy.visit(['sample', 'forum', 'threads', '9']);
+//
+//         cy.get('#posts_list').compareSnapshot('forum-threads-9',  1.0, {
+//             capture: 'viewport',
+//             clip: { x: 0, y: 0, width: 1000, height: 1000 },
+//             // Assuming the last parameter is the threshold for image comparison
+//         });
+//     });
+// });
 const replyDisabled = (title, attachment) => {
     cy.get('.thread-left-cont > .thread-list-item').contains(title).click();
     // Reply button should be disabled by default with no text
@@ -80,6 +80,17 @@ describe('Test cases revolving around creating, replying to, merging, and removi
         cy.visit(['sample']);
         cy.get('#nav-sidebar-forum').click();
         cy.get('#nav-sidebar-collapse-sidebar').click();
+    });
+    it('should compare screenshot of the entire page', () => {
+        cy.viewport(1000, 1000);
+        cy.login('instructor');
+        cy.visit(['sample', 'forum', 'threads', '9']);
+
+        cy.get('#posts_list').compareSnapshot('forum-threads-9',  1.0, {
+            capture: 'viewport',
+            clip: { x: 0, y: 0, width: 1000, height: 1000 },
+            // Assuming the last parameter is the threshold for image comparison
+        });
     });
 
     it('Reply button is disabled when applicable and thread reply can contain an attachment', () => {
