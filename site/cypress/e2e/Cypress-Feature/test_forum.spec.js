@@ -97,7 +97,8 @@ describe('Test cases revolving around creating, replying to, merging, and removi
         // cy.get('#posts_list').compareSnapshot('forum-threads-9');
         cy.get('#posts_list').compareSnapshot('forum-threads-9',  1.0, {
             capture: 'viewport',
-            clip: { x: 0, y: 0, width: 683, height: 535 },
+            // clip: { x: 0, y: 0, width: 683, height: 535 },
+            clip: { x: 0, y: 0, width: 683, height: 536 },
             // Assuming the last parameter is the threshold for image comparison
         });
     });
