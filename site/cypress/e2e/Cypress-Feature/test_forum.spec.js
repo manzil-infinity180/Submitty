@@ -47,6 +47,7 @@ const removeThread = (title) => {
     cy.get('.thread-left-cont > .thread-list-item').contains(title).should('not.exist');
 };
 
+
 const uploadAttachmentAndDelete = (title) => {
     cy.get('[data-testid="thread-list-item"]').contains(title).click();
     cy.get('[data-testid="create-post-head"]').should('contain', title);
@@ -80,6 +81,26 @@ describe('Test cases revolving around creating, replying to, merging, and removi
         cy.visit(['sample']);
         cy.get('#nav-sidebar-forum').click();
         cy.get('#nav-sidebar-collapse-sidebar').click();
+    });
+    after(() => {
+        //custom task to generate report
+        cy.task("generateReport");
+    });
+
+    it('should compare screenshot of the entire page', () => {
+        // cy.viewport(1000, 1000);
+        cy.login('instructor');
+        cy.visit(['sample', 'forum', 'threads', '9']);
+
+        // cy.get('.first_post').compareSnapshot('first-post');
+        // cy.get('.language-c').compareSnapshot('language-c');
+        // cy.get('#posts_list').compareSnapshot('forum-threads-9');
+        cy.get('#posts_list').compareSnapshot('forum-threads-9',  1.0, {
+            capture: 'viewport',
+            // clip: { x: 0, y: 0, width: 683, height: 535 },
+            clip: { x: 0, y: 0, width: 683, height: 536 },
+            // Assuming the last parameter is the threshold for image comparison
+        });
     });
 
     it('Reply button is disabled when applicable and thread reply can contain an attachment', () => {
