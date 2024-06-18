@@ -512,11 +512,6 @@ jobs:
         with:
           name: cypress-videos
           path: ${{env.SUBMITTY_REPOSITORY}}/site/cypress/videos
-      - uses: actions/upload-artifact@v4
-        with:
-          name: cypress-visual-testing
-          path: ${{env.SUBMITTY_REPOSITORY}}/site/cypress-image-diff-screenshots
-
 
 
   Integration:
