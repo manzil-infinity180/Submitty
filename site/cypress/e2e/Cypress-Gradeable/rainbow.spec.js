@@ -43,23 +43,23 @@ skipOn(Cypress.env('run_area') === 'CI', () => {
                     checkRainbowGrades('grader', 10306042, 'Tim', 'Grader');
                     checkRainbowGradesOption();
                 }
-         });
+            });
             cy.visit(['sample', 'config']);
             cy.get('[data-testid="display-rainbow-grades-summary"]').uncheck();
             cy.get('[data-testid="display-rainbow-grades-summary"]').should('not.be.checked');
             cy.visit(['sample', 'grades']);
             cy.get('[data-testid="rainbow-grades"]').should('contain', 'No grades are available...');
-     });
-  });
+        });
+    });
 });
- 
- const checkRainbowGrades = (username, numericId, firstName, lastname) => {
+const checkRainbowGrades = (username, numericId, firstName, lastname) => {
      [username, numericId, firstName, lastname].forEach((value) => {
          cy.get('[data-testid="rainbow-grades"]').should('contain', value);
      });
  };
- const checkRainbowGradesOption = () => {
+const checkRainbowGradesOption = () => {
      ['USERNAME', 'NUMERIC ID', 'FIRST', 'LAST', 'OVERALL', 'AVERAGE', 'STDDEV', 'PERFECT'].forEach((element) => {
+         cy.get('[data-testid="rainbow-grades"]').should('contain', element);
          cy.get('[data-testid="rainbow-grades"]').should('contain', element);
      });
  };
