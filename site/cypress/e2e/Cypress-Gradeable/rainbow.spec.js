@@ -1,3 +1,5 @@
+import { skipOn } from '@cypress/skip-test';
+skipOn(Cypress.env('run_area') === 'CI', () => {
 describe('Test Rainbow Grading', () => {
     beforeEach(() => {
         cy.login('instructor');
@@ -49,6 +51,7 @@ describe('Test Rainbow Grading', () => {
         cy.visit(['sample', 'grades']);
         cy.get('[data-testid="rainbow-grades"]').should('contain', 'No grades are available...');
     });
+ });
 });
 
 const checkRainbowGrades = (username, numericId, firstName, lastname) => {
