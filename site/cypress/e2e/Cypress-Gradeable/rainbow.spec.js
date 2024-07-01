@@ -4,25 +4,25 @@ skipOn(Cypress.env('run_area') === 'CI', () => {
         beforeEach(() => {
             cy.login('instructor');
             cy.visit(['sample', 'config']);
-     });
-     it('Enable viewing of rainbow grades and generating the rainbow grading', () => {
-         cy.get('[data-testid="display-rainbow-grades-summary"]').check();
-         cy.get('[data-testid="display-rainbow-grades-summary"]').should('be.checked');
-         cy.visit(['sample', 'reports', 'rainbow_grades_customization']);
-         cy.get('[data-testid="display-grade-summary"]').check();
-         cy.get('[data-testid="display-grade-summary"]').should('be.checked');
-         cy.get('[data-testid="display-grade-details"]').check();
-         cy.get('[data-testid="display-benchmarks-average"]').check();
-         cy.get('[data-testid="display-benchmarks-stddev"]').check();
-         cy.get('[data-testid="display-benchmarks-perfect"]').check();
-         cy.get('[data-testid="save-status-button"]').click();
-         cy.get('[data-testid="save-status"]', { timeout: 15000 }).should('contain', 'Rainbow grades successfully generated!');
-         cy.visit(['sample', 'grades']);
-         ['USERNAME', 'NUMERIC ID', 'AVERAGE', 'STDDEV', 'PERFECT'].forEach((fields) => {
-             cy.get('[data-testid="rainbow-grades"]').should('contain', fields);
-         });
-         cy.get('[data-testid="rainbow-grades"]').should('contain', 'Information last updated');
-         ['ta', 'student', 'grader', 'instructor'].forEach((username) => {
+        });
+        it('Enable viewing of rainbow grades and generating the rainbow grading', () => {
+            cy.get('[data-testid="display-rainbow-grades-summary"]').check();
+            cy.visit(['sample', 'reports', 'rainbow_grades_customization']);
+            cy.get('[data-testid="display-rainbow-grades-summary"]').should('be.checked');
+            cy.get('[data-testid="display-grade-summary"]').check();
+            cy.get('[data-testid="display-grade-summary"]').should('be.checked');
+            cy.get('[data-testid="display-grade-details"]').check();
+            cy.get('[data-testid="display-benchmarks-average"]').check();
+            cy.get('[data-testid="display-benchmarks-stddev"]').check();
+            cy.get('[data-testid="display-benchmarks-perfect"]').check();
+            cy.get('[data-testid="save-status-button"]').click();
+            cy.get('[data-testid="save-status"]', { timeout: 15000 }).should('contain', 'Rainbow grades successfully generated!');
+            cy.visit(['sample', 'grades']);
+            ['USERNAME', 'NUMERIC ID', 'AVERAGE', 'STDDEV', 'PERFECT'].forEach((fields) => {
+               cy.get('[data-testid="rainbow-grades"]').should('contain', fields);
+            });
+            cy.get('[data-testid="rainbow-grades"]').should('contain', 'Information last updated');
+            ['ta', 'student', 'grader', 'instructor'].forEach((username) => {
              cy.logout();
              cy.login(username);
              cy.visit(['sample', 'grades']);
@@ -63,3 +63,4 @@ skipOn(Cypress.env('run_area') === 'CI', () => {
          cy.get('[data-testid="rainbow-grades"]').should('contain', element);
      });
  };
+ 
