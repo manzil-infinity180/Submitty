@@ -53,12 +53,12 @@ skipOn(Cypress.env('run_area') === 'CI', () => {
     });
 });
 const checkRainbowGrades = (username, numericId, firstName, lastname) => {
-     [username, numericId, firstName, lastname].forEach((value) => {
+    [username, numericId, firstName, lastname].forEach((value) => {
         cy.get('[data-testid="rainbow-grades"]').should('contain', value);
-     });
+    });
 };
 const checkRainbowGradesOption = () => {
-     ['USERNAME', 'NUMERIC ID', 'FIRST', 'LAST', 'OVERALL', 'AVERAGE', 'STDDEV', 'PERFECT'].forEach((element) => {
+    ['USERNAME', 'NUMERIC ID', 'FIRST', 'LAST', 'OVERALL', 'AVERAGE', 'STDDEV', 'PERFECT'].forEach((element) => {
         cy.get('[data-testid="rainbow-grades"]').should('contain', element);
-     });
+    });
 };
