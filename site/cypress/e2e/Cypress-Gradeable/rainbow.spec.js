@@ -1,9 +1,9 @@
 import { skipOn } from '@cypress/skip-test';
-	skipOn(Cypress.env('run_area') === 'CI', () => {
-     describe('Test Rainbow Grading', () => {
-     beforeEach(() => {
-         cy.login('instructor');
-         cy.visit(['sample', 'config']);
+skipOn(Cypress.env('run_area') === 'CI', () => {
+    describe('Test Rainbow Grading', () => {
+        beforeEach(() => {
+            cy.login('instructor');
+            cy.visit(['sample', 'config']);
      });
      it('Enable viewing of rainbow grades and generating the rainbow grading', () => {
          cy.get('[data-testid="display-rainbow-grades-summary"]').check();
@@ -63,4 +63,3 @@ import { skipOn } from '@cypress/skip-test';
          cy.get('[data-testid="rainbow-grades"]').should('contain', element);
      });
  };
- 
