@@ -90,7 +90,7 @@
     <div class="details-action-box">
         {# Import+Export teams buttons #}
         {% if show_import_teams_button %}
-            <a class="btn btn-primary"
+            <a class="btn btn-primary" data-testid="export-team-members"
                href="{{ export_teams_url }}"
             >Export Teams Members</a>
         {% endif %}
