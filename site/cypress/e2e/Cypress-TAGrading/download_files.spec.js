@@ -1,14 +1,8 @@
 const path = require('path');
-describe('downloading export team csv file', () => {
+describe('download zip button,export team, gradeable json file', () => {
     const downloadsFolder = Cypress.config('downloadsFolder');
     it('downloading and verifying the file', () => {
         cy.login();
-        // cy.intercept({
-        //     method: 'GET',
-        //     url: 'http://localhost:1511/courses/f24/sample/gradeable/grading_homework_team_pdf/grading/teams/export',
-        //   }, (req) => {
-        //     console.log(req);
-        //   })
         cy.visit(['sample', 'gradeable', 'grading_homework_team_pdf', 'grading', 'details']);
         cy.get('[data-testid="export-team-members"]').click();
         let filename = path.join(downloadsFolder, 'sample_grading_homework_team_pdf_teams.csv');
@@ -52,9 +46,10 @@ describe('downloading export team csv file', () => {
         });
 
         // download zip file button
-        cy.visit(['sample', 'gradeable', 'grading_homework_team_pdf', 'grading', 'grade?who_id=CUe7mZN5dPBmTtz&sort=id&direction=ASC']);
+        cy.visit(['sample', 'gradeable', 'grading_homework', 'grading', 'grade?who_id=hG1b13ljpDjKu32&sort=id&direction=ASC']);
         cy.get('body').type('{O}');
         cy.get('[data-testid="download-zip-file"]').click();
-        filename = path.join(downloadsFolder, 'grading_homework_team_pdf.json');
+        filename = path.join(downloadsFolder, 'grading_homework_hG1b13ljpDjKu32_v1.zip');
+        cy.readFile(filename, { timeout: 15000 });
     });
 });
