@@ -13,7 +13,6 @@ use app\libraries\response\MultiResponse;
 use app\libraries\response\JsonResponse;
 use app\views\MiscView;
 use Symfony\Component\Routing\Annotation\Route;
-use app\models\User;
 
 class MiscController extends AbstractController {
     const GENERIC_NO_ACCESS_MSG = 'You do not have access to this file';
