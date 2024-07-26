@@ -1112,7 +1112,7 @@ HTML;
             );
 
             $return .= <<<HTML
-                <div class="panels-container">
+                <div class="panels-container" data-testid="panels-container">
                     <div class="two-panel-cont">
                          <div class="two-panel-item two-panel-left active">
                             <div class="panel-item-section left-top"></div>
