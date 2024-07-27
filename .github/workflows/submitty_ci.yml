@@ -492,7 +492,10 @@ jobs:
         if: failure()
         with:
           name: cypress-screenshots
-          path: ${{env.SUBMITTY_REPOSITORY}}/site/cypress/screenshots
+          path: |
+            ${{env.SUBMITTY_REPOSITORY}}/site/cypress/screenshots
+            ${{env.SUBMITTY_REPOSITORY}}/site/cypress-image-diff-screenshots
+
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
@@ -556,11 +559,6 @@ jobs:
         working-directory: ${{ env.SUBMITTY_REPOSITORY }}
         run: sudo bash tests/test_site_error_log.sh
 
-      - uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: cypress-image-diff-screenshots
-          path: ${{env.SUBMITTY_REPOSITORY}}/site/cypress-image-diff-screenshots
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
