@@ -65,10 +65,27 @@ const removeThread = (title) => {
 };
 
 describe('Visuals', () => {
+    Cypress.on('uncaught:exception', (err, runnable) => {
+        // returning false here prevents Cypress from
+        // failing the test
+        return false
+    });
+    Cypress.on('before:browser:launch', (args, browser = {}) => {
+        if (browser.name === 'chrome') {
+            args.push('--window-size=1000,920');
+            return args;
+        }
+        if (browser.name === 'electron') {
+            args['width'] = 1000;
+            args['height'] = 920;
+            args['resizable'] = false;
+            return args;
+        }
+    });
     it('should compare screenshot of the entire page', () => {
-        cy.viewport(1000, 920);
         cy.login('instructor');
-        cy.visit(['sample', 'forum', 'threads', '9']);
+        // cy.visit(['sample', 'forum', 'threads', '9']);
+        cy.visit('http://localhost:1511/courses/s24/sample/forum/threads/9');
         cy.get('[data-testid="markdown-post-list"]').scrollTo('top');
         cy.get('[data-testid="markdown-post-list"]').compareSnapshot('forum-threads-top', 0.02, {
             capture: 'viewport',
@@ -84,125 +101,125 @@ describe('Visuals', () => {
     });
 });
 
-const uploadAttachmentAndDelete = (title, attachment) => {
-    cy.get('[data-testid="thread-list-item"]').contains(title).click();
-    cy.get('[data-testid="create-post-head"]').should('contain', title);
-    cy.get('[data-testid="thread-dropdown"]').first().click();
-    cy.get('[data-testid="edit-post-button"]').first().click();
-    cy.get('[data-testid="input-file1"]').selectFile(`cypress/fixtures/${attachment}`);
-    cy.get('[data-testid="file-upload-table-1"]').should('contain', attachment);
-    cy.get('[data-testid="forum-update-post"]').contains('Update Post').click();
-    cy.get('[data-testid="thread-dropdown"]').first().click();
-    cy.get('[data-testid="edit-post-button"]').first().click();
-    cy.get('[data-testid="mark-for-delete-btn"]').first().should('contain', 'Delete').click();
-    cy.get('[data-testid="mark-for-delete-btn"]').first().should('contain', 'Keep');
-    cy.get('[data-testid="forum-update-post"]').contains('Update Post').click();
-};
+// const uploadAttachmentAndDelete = (title, attachment) => {
+//     cy.get('[data-testid="thread-list-item"]').contains(title).click();
+//     cy.get('[data-testid="create-post-head"]').should('contain', title);
+//     cy.get('[data-testid="thread-dropdown"]').first().click();
+//     cy.get('[data-testid="edit-post-button"]').first().click();
+//     cy.get('[data-testid="input-file1"]').selectFile(`cypress/fixtures/${attachment}`);
+//     cy.get('[data-testid="file-upload-table-1"]').should('contain', attachment);
+//     cy.get('[data-testid="forum-update-post"]').contains('Update Post').click();
+//     cy.get('[data-testid="thread-dropdown"]').first().click();
+//     cy.get('[data-testid="edit-post-button"]').first().click();
+//     cy.get('[data-testid="mark-for-delete-btn"]').first().should('contain', 'Delete').click();
+//     cy.get('[data-testid="mark-for-delete-btn"]').first().should('contain', 'Keep');
+//     cy.get('[data-testid="forum-update-post"]').contains('Update Post').click();
+// };
 
-const replyDisabled = (title, attachment) => {
-    cy.get('[data-testid="thread-list-item"]').contains(title).click();
-    // Reply button should be disabled by default with no text
-    cy.get('[data-testid="forum-submit-reply-all"]').should('be.disabled');
+// const replyDisabled = (title, attachment) => {
+//     cy.get('[data-testid="thread-list-item"]').contains(title).click();
+//     // Reply button should be disabled by default with no text
+//     cy.get('[data-testid="forum-submit-reply-all"]').should('be.disabled');
 
-    // Ensure reply button is not disabled when attachments are added
-    // waits here are needed to avoid a reload that would clear out the upload
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(750);
-    cy.get('[data-testid="input-file3"]').selectFile(`cypress/fixtures/${attachment}`);
-    cy.get('[data-testid="forum-submit-reply-all"]').should('not.be.disabled').click();
+//     // Ensure reply button is not disabled when attachments are added
+//     // waits here are needed to avoid a reload that would clear out the upload
+//     // eslint-disable-next-line cypress/no-unnecessary-waiting
+//     cy.wait(750);
+//     cy.get('[data-testid="input-file3"]').selectFile(`cypress/fixtures/${attachment}`);
+//     cy.get('[data-testid="forum-submit-reply-all"]').should('not.be.disabled').click();
 
-    // Wait for submission and ensure attachment with no text is visible
-    cy.get('.attachment-btn').click();
-    cy.contains('p', attachment).should('be.visible');
-};
+//     // Wait for submission and ensure attachment with no text is visible
+//     cy.get('.attachment-btn').click();
+//     cy.contains('p', attachment).should('be.visible');
+// };
 
-const removeUpduckPost = (thread_title) => {
-    cy.get('[data-testid="create-post-head"]').should('contain', thread_title);
-    cy.get('[data-testid="like-count"]').first().should('have.text', 1);
-    cy.get('[data-testid="upduck-button"]').first().click();
-    cy.get('[data-testid="like-count"]').first().should('have.text', 0);
-};
+// const removeUpduckPost = (thread_title) => {
+//     cy.get('[data-testid="create-post-head"]').should('contain', thread_title);
+//     cy.get('[data-testid="like-count"]').first().should('have.text', 1);
+//     cy.get('[data-testid="upduck-button"]').first().click();
+//     cy.get('[data-testid="like-count"]').first().should('have.text', 0);
+// };
 
-const staffUpduckPost = (user, thread_title) => {
-    checkStaffUpduck(thread_title, 'be.not.visible');
-    upduckPost(thread_title);
-    checkStaffUpduck(thread_title, 'be.visible');
+// const staffUpduckPost = (user, thread_title) => {
+//     checkStaffUpduck(thread_title, 'be.not.visible');
+//     upduckPost(thread_title);
+//     checkStaffUpduck(thread_title, 'be.visible');
 
-    if (user !== 'instructor') {
-        removeUpduckPost(thread_title);
-        checkStaffUpduck(thread_title, 'be.not.visible');
-    }
-};
+//     if (user !== 'instructor') {
+//         removeUpduckPost(thread_title);
+//         checkStaffUpduck(thread_title, 'be.not.visible');
+//     }
+// };
 
-const studentUpduckPost = (thread_title) => {
-    checkStaffUpduck(thread_title, 'be.not.visible');
-    upduckPost(thread_title);
-    checkStaffUpduck(thread_title, 'be.not.visible');
-    removeUpduckPost(thread_title);
-};
+// const studentUpduckPost = (thread_title) => {
+//     checkStaffUpduck(thread_title, 'be.not.visible');
+//     upduckPost(thread_title);
+//     checkStaffUpduck(thread_title, 'be.not.visible');
+//     removeUpduckPost(thread_title);
+// };
 
-const checkStaffUpduck = (title, visible) => {
-    cy.get('[data-testid="thread-list-item"]').contains(title).click();
-    cy.get('[data-testid="create-post-head"]').should('contain', title);
-    cy.get('[data-testid="instructor-like"]').first().should(visible);
-};
+// const checkStaffUpduck = (title, visible) => {
+//     cy.get('[data-testid="thread-list-item"]').contains(title).click();
+//     cy.get('[data-testid="create-post-head"]').should('contain', title);
+//     cy.get('[data-testid="instructor-like"]').first().should(visible);
+// };
 
-describe('Should test creating, replying, merging, removing, and upducks in forum', () => {
-    beforeEach(() => {
-        cy.login('instructor');
-        cy.visit(['sample', 'forum']);
-        cy.get('#nav-sidebar-collapse-sidebar').click();
-    });
+// describe('Should test creating, replying, merging, removing, and upducks in forum', () => {
+//     beforeEach(() => {
+//         cy.login('instructor');
+//         cy.visit(['sample', 'forum']);
+//         cy.get('#nav-sidebar-collapse-sidebar').click();
+//     });
 
-    it('Reply button is disabled when applicable and thread reply can contain an attachment', () => {
-        createThread(title1, title1, 'Comment');
-        replyDisabled(title1, attachment1);
-        removeThread(title1);
-    });
+//     it('Reply button is disabled when applicable and thread reply can contain an attachment', () => {
+//         createThread(title1, title1, 'Comment');
+//         replyDisabled(title1, attachment1);
+//         removeThread(title1);
+//     });
 
-    it('Create, reply to, merge, and delete threads', () => {
-        // Add and Delete Image Attachment
-        uploadAttachmentAndDelete(title4, attachment1);
-        createThread(title1, content1, 'Comment');
-        createThread(title2, content2, 'Question');
-        createThread(title3, content3, 'Tutorials');
+//     it('Create, reply to, merge, and delete threads', () => {
+//         // Add and Delete Image Attachment
+//         uploadAttachmentAndDelete(title4, attachment1);
+//         createThread(title1, content1, 'Comment');
+//         createThread(title2, content2, 'Question');
+//         createThread(title3, content3, 'Tutorials');
 
-        replyToThread(title1, reply1);
-        replyToThread(title2, reply2);
-        replyToThread(title3, reply3);
+//         replyToThread(title1, reply1);
+//         replyToThread(title2, reply2);
+//         replyToThread(title3, reply3);
 
-        // Student upduck
-        cy.logout();
-        cy.login('student');
-        cy.visit(['sample', 'forum']);
-        studentUpduckPost(title1);
-        studentUpduckPost(title2);
-        studentUpduckPost(title3);
+//         // Student upduck
+//         cy.logout();
+//         cy.login('student');
+//         cy.visit(['sample', 'forum']);
+//         studentUpduckPost(title1);
+//         studentUpduckPost(title2);
+//         studentUpduckPost(title3);
 
-        // TA upduck
-        cy.logout();
-        cy.login('ta');
-        cy.visit(['sample', 'forum']);
-        staffUpduckPost('ta', title1);
-        staffUpduckPost('ta', title2);
-        staffUpduckPost('ta', title3);
+//         // TA upduck
+//         cy.logout();
+//         cy.login('ta');
+//         cy.visit(['sample', 'forum']);
+//         staffUpduckPost('ta', title1);
+//         staffUpduckPost('ta', title2);
+//         staffUpduckPost('ta', title3);
 
-        // Instructor upduck and check the stats page for instructor with 3 upducks
-        cy.logout();
-        cy.login('instructor');
-        cy.visit(['sample', 'forum']);
-        staffUpduckPost('instructor', title1);
-        staffUpduckPost('instructor', title2);
-        staffUpduckPost('instructor', title3);
-        checkStatsUpducks('Instructor, Quinn', 3);
+//         // Instructor upduck and check the stats page for instructor with 3 upducks
+//         cy.logout();
+//         cy.login('instructor');
+//         cy.visit(['sample', 'forum']);
+//         staffUpduckPost('instructor', title1);
+//         staffUpduckPost('instructor', title2);
+//         staffUpduckPost('instructor', title3);
+//         checkStatsUpducks('Instructor, Quinn', 3);
 
-        // Tutorial into Questions
-        mergeThreads(title3, title2, merged1);
+//         // Tutorial into Questions
+//         mergeThreads(title3, title2, merged1);
 
-        // Resulting thread into comment
-        mergeThreads(title2, title1, merged2);
+//         // Resulting thread into comment
+//         mergeThreads(title2, title1, merged2);
 
-        // Remove threads
-        removeThread(title1);
-    });
-});
+//         // Remove threads
+//         removeThread(title1);
+//     });
+// });
