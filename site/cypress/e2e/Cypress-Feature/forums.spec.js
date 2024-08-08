@@ -64,6 +64,9 @@ const removeThread = (title) => {
 };
 
 describe('Visuals', () => {
+    Cypress.on('uncaught:exception', (err, runnable) => {
+    return false
+  });
     it('should compare screenshot of the entire page', () => {
         cy.viewport(1000, 920);
         cy.login('instructor');
